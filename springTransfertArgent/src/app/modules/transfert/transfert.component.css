@@ -1,0 +1,12 @@
+table{
+    width: 80%;
+    margin: 2% auto;
+}
+
+.displayNone{
+    display: none;
+}
+
+.displayBlock{
+    display:  block;
+}

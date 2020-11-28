@@ -1,0 +1,122 @@
+<table *ngIf="url === '/Transfert'" mat-table [dataSource]="datasource" class="mat-elevation-z8" id="table">
+
+  <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+  <!-- Position Column -->
+  <ng-container matColumnDef="prenomEmetteur">
+    <th mat-header-cell *matHeaderCellDef> Prenom Emetteur </th>
+    <td mat-cell *matCellDef="let element"> {{element.emetteur.prenom}} </td>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="nomEmetteur">
+    <th mat-header-cell *matHeaderCellDef> Nom Emetteur </th>
+    <td mat-cell *matCellDef="let element"> {{element.emetteur.nom}} </td>
+  </ng-container>
+
+  <!-- Weight Column -->
+  <ng-container matColumnDef="telEmetteur">
+    <th mat-header-cell *matHeaderCellDef> Telephone Emetteur </th>
+    <td mat-cell *matCellDef="let element"> {{element.emetteur.tel}} </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="prenomRecepteur">
+    <th mat-header-cell *matHeaderCellDef> Prenom Recepteur </th>
+    <td mat-cell *matCellDef="let element"> {{element.recepteur.prenom}} </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="nomRecepteur">
+    <th mat-header-cell *matHeaderCellDef> Nom Recepteur </th>
+    <td mat-cell *matCellDef="let element"> {{element.recepteur.nom}} </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="telRecepteur">
+    <th mat-header-cell *matHeaderCellDef> Telephone Recepteur </th>
+    <td mat-cell *matCellDef="let element"> {{element.recepteur.tel}} </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="cniRecepteur">
+    <th mat-header-cell *matHeaderCellDef> CNI Recepteur </th>
+    <td mat-cell *matCellDef="let element"> {{element.recepteur.cni}} </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="montant">
+    <th mat-header-cell *matHeaderCellDef> Montant </th>
+    <td mat-cell *matCellDef="let element"> {{element.montant}} </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef> Date </th>
+    <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+
+<div *ngIf="url === '/Transfert/add'" class="card col-md-8 offset-md-2 mt-5 mb-5 my-5 " id="form">
+  <div class="card-header text-white bg-primary">Ajout d'un Transfert</div>
+  <div class="card-body">
+    <form class="example-form" (ngSubmit)="addTransfert()" id="addTransfert" >
+      <div class="form-group col-md-4 offset-md-4">
+        <label class="control-label">Montant</label>
+        <input type="text" (keyup)="saisieNombre($event)"  name="monntant" id="montant"  class="form-control"  [(ngModel)]="transfert.montant">
+        <div class="text-danger" *ngIf="champVide('montant') && isSubmited">Montant Invalid</div>
+
+      </div>
+      <div class="row">
+        <div class="form-group col-md-5">
+          <label class="control-label">Prenom Emetteur</label>
+          <input type="text"  name="prenomEmetteur" id="prenomEmetteur"  (keypress)="testInput($event, 'prenomEmetteur')" class="form-control" [(ngModel)]="transfert.emetteur.prenom">
+          <div class="text-danger" *ngIf="champVide('prenomEmetteur') && isSubmited">Prenom Emetteur Invalid</div>
+        </div>
+        <div class="form-group  col-md-4">
+          <label class="control-label">Nom Emetteur</label>
+          <input type="text"  name="nomEmetteur" id="nomEmetteur" (keypress)="testInput($event, 'nomEmetteur')"  class="form-control" [(ngModel)]="transfert.emetteur.nom">
+          <div class="text-danger" *ngIf="champVide('nomEmetteur') && isSubmited">Nom Emetteur Invalid</div>
+        </div>
+        <div class="form-group  col-md-3">
+          <label class="control-label">Telephone Emetteur</label>
+          <input type="text" id="telephoneEmetteur"  name="telephoneEmetteur" (blur)="verifieNumero('telephoneEmetteur')" (keypress)="saisieNumero($event,'telephoneEmetteur')" class="form-control" [(ngModel)]="transfert.emetteur.tel">
+            <div class="text-danger" *ngIf="verifieNumero('telephoneEmetteur') && isSubmited">Numero de telephone Invalid</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-7">
+          <label class="control-label">Prenom Recepteur</label>
+          <input type="text"  name="prenomRecepteur" id="prenomRecepteur" (keypress)="testInput($event, 'prenomRecepteur')"  class="form-control"  [(ngModel)]="transfert.recepteur.prenom">
+          <div class="text-danger" *ngIf="champVide('prenomRecepteur') && isSubmited">Prenom Recepteur Invalid</div>
+        </div>
+        <div class="form-group col-md-5">
+          <label class="control-label">Nom Recepteur</label>
+          <input type="text"  name="nomRecepteur" id="nomRecepteur" (keypress)="testInput($event, 'nomRecepteur')"  class="form-control"  [(ngModel)]="transfert.recepteur.nom">
+          <div class="text-danger" *ngIf="champVide('nomRecepteur') && isSubmited">Nom Recepteur Invalid</div>
+        </div>
+      </div>
+      <div class="row">
+
+        <div class="form-group col-md-6">
+          <label class="control-label">Telephone Recepteur</label>
+          <input type="text" id="telephoneRecepteur" (blur)="verifieNumero('telephoneRecepteur')"  name="telephoneRecepteur" (keypress)="saisieNumero($event,'telephoneRecepteur')" class="form-control" [(ngModel)]="transfert.recepteur.tel">
+            <div class="text-danger" *ngIf="verifieNumero('telephoneRecepteur') && isSubmited==true">Numero de telephone Invalid</div>
+        </div>
+        <div class="form-group col-md-6">
+          <label class="control-label">NCI Recepteur</label>
+          <input type="text" id="cniRecepteur"  (keypress)="saisieNombre($event)" name="cniRecepteur" (blur)="verifiecni('cniRecepteur')"  class="form-control"  [(ngModel)]="transfert.recepteur.cni" >
+          <div class="text-danger" *ngIf="verifiecni('cniRecepteur')  && isSubmited">Numero de telephone Invalid</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <input type="submit"  class="btn btn-primary" name="transferer" value="Transferer" >
+      </div>
+    </form>
+  </div>
+</div>
